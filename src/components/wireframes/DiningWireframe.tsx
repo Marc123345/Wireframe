@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { useState } from 'react';
 import { Clock, MapPin, ArrowRight } from 'lucide-react';
+import { Footer } from './Footer';
 
 const VENUES = [
   {
@@ -63,7 +64,9 @@ const EXPERIENCES = [
   { title: 'Private Beach Dinner', price: 'from $180 pp', desc: 'A bespoke candlelit dinner curated exclusively for two, right on the sand.' },
 ];
 
-export function DiningWireframe() {
+interface Props { onNavigate: (tab: string) => void; }
+
+export function DiningWireframe({ onNavigate }: Props) {
   const [active, setActive] = useState('makuti');
   const venue = VENUES.find(v => v.id === active)!;
 
@@ -176,11 +179,13 @@ export function DiningWireframe() {
               </div>
 
               <div style={{ display: 'flex', gap: 12 }}>
-                <button style={{
-                  background: '#0a4a6b', color: '#fff', border: 'none',
-                  padding: '12px 24px', fontSize: 10, fontWeight: 800,
-                  letterSpacing: '0.14em', textTransform: 'uppercase', cursor: 'pointer'
-                }}>
+                <button
+                  onClick={() => onNavigate('booking')}
+                  style={{
+                    background: '#0a4a6b', color: '#fff', border: 'none',
+                    padding: '12px 24px', fontSize: 10, fontWeight: 800,
+                    letterSpacing: '0.14em', textTransform: 'uppercase', cursor: 'pointer'
+                  }}>
                   Reserve a Table
                 </button>
                 <button style={{
@@ -236,6 +241,7 @@ export function DiningWireframe() {
         </div>
       </div>
 
+      <Footer onNavigate={onNavigate} />
     </div>
   );
 }

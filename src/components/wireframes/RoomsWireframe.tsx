@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Check, Star } from 'lucide-react';
+import { Footer } from './Footer';
 
 const FILTERS = ['All Rooms', 'Bluebay Resort', 'Sultan Sands', 'Suites', 'Beach View'];
 
@@ -72,7 +73,9 @@ const ROOMS = [
   },
 ];
 
-export function RoomsWireframe() {
+interface Props { onNavigate: (tab: string) => void; }
+
+export function RoomsWireframe({ onNavigate }: Props) {
   const [activeFilter, setActiveFilter] = useState('All Rooms');
   const [expanded, setExpanded] = useState<string | null>(null);
 
@@ -221,11 +224,13 @@ export function RoomsWireframe() {
                   <div className="font-playfair" style={{ fontSize: 32, fontWeight: 600, color: '#0a4a6b', lineHeight: 1 }}>${room.from}</div>
                   <div style={{ fontSize: 11, color: '#aaa', marginTop: 4 }}>per night</div>
                 </div>
-                <button style={{
-                  background: '#0a4a6b', color: '#fff', border: 'none',
-                  padding: '11px 22px', fontSize: 10, fontWeight: 800,
-                  letterSpacing: '0.14em', textTransform: 'uppercase', cursor: 'pointer'
-                }}>
+                <button
+                  onClick={() => onNavigate('booking')}
+                  style={{
+                    background: '#0a4a6b', color: '#fff', border: 'none',
+                    padding: '11px 22px', fontSize: 10, fontWeight: 800,
+                    letterSpacing: '0.14em', textTransform: 'uppercase', cursor: 'pointer'
+                  }}>
                   Book Now
                 </button>
                 <button style={{
@@ -267,11 +272,13 @@ export function RoomsWireframe() {
                             <span style={{ fontSize: 12, color: '#555' }}>{p}</span>
                           </div>
                         ))}
-                        <button style={{
-                          marginTop: 16, width: '100%', background: '#0f0f0f', color: '#fff',
-                          border: 'none', padding: '11px', fontSize: 10, fontWeight: 800,
-                          letterSpacing: '0.14em', textTransform: 'uppercase', cursor: 'pointer'
-                        }}>
+                        <button
+                          onClick={() => onNavigate('booking')}
+                          style={{
+                            marginTop: 16, width: '100%', background: '#0f0f0f', color: '#fff',
+                            border: 'none', padding: '11px', fontSize: 10, fontWeight: 800,
+                            letterSpacing: '0.14em', textTransform: 'uppercase', cursor: 'pointer'
+                          }}>
                           Select
                         </button>
                       </div>
@@ -299,6 +306,7 @@ export function RoomsWireframe() {
           ))}
         </div>
       </div>
+      <Footer onNavigate={onNavigate} />
     </div>
   );
 }

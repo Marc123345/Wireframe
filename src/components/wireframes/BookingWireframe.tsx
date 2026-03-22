@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { useState } from 'react';
 import { Check, ChevronRight, Lock, Phone } from 'lucide-react';
+import { Footer } from './Footer';
 
 const STEPS = ['Dates & Resort', 'Choose Room', 'Extras', 'Confirm & Pay'];
 
@@ -19,7 +20,9 @@ const EXTRAS = [
   { id: 'romance',   label: 'Romance Package',     desc: 'Rose petals, champagne & private beach dinner for two',      price: 180, per: ''       },
 ];
 
-export function BookingWireframe() {
+interface Props { onNavigate: (tab: string) => void; }
+
+export function BookingWireframe({ onNavigate }: Props) {
   const [step, setStep] = useState(1);
   const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
   const [selectedExtras, setSelectedExtras] = useState<string[]>([]);
@@ -418,6 +421,7 @@ export function BookingWireframe() {
           </div>
         </div>
       </div>
+      <Footer onNavigate={onNavigate} />
     </div>
   );
 }

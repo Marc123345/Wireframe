@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { useState } from 'react';
 import { Clock, ArrowRight, Check } from 'lucide-react';
+import { Footer } from './Footer';
 
 const CATEGORIES = ['All', 'Massages', 'Facials', 'Body Rituals', 'Couples'];
 
@@ -64,7 +65,9 @@ const FACILITIES = [
   { label: 'Spa lounge & refreshments' },
 ];
 
-export function SpaWireframe() {
+interface Props { onNavigate: (tab: string) => void; }
+
+export function SpaWireframe({ onNavigate }: Props) {
   const [activeCategory, setActiveCategory] = useState('All');
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
@@ -250,11 +253,13 @@ export function SpaWireframe() {
                 <div className="font-playfair" style={{ fontSize: 28, fontWeight: 600, color: '#0a4a6b', lineHeight: 1 }}>${t.price}</div>
                 <div style={{ fontSize: 11, color: '#aaa', marginTop: 2 }}>per person</div>
               </div>
-              <button style={{
-                background: '#0a4a6b', color: '#fff', border: 'none',
-                padding: '10px 20px', fontSize: 10, fontWeight: 800,
-                letterSpacing: '0.12em', textTransform: 'uppercase', cursor: 'pointer'
-              }}>
+              <button
+                onClick={() => onNavigate('booking')}
+                style={{
+                  background: '#0a4a6b', color: '#fff', border: 'none',
+                  padding: '10px 20px', fontSize: 10, fontWeight: 800,
+                  letterSpacing: '0.12em', textTransform: 'uppercase', cursor: 'pointer'
+                }}>
                 Book
               </button>
             </div>
@@ -278,12 +283,14 @@ export function SpaWireframe() {
             </p>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'flex-start' }}>
-            <button style={{
-              background: '#c8a96e', color: '#0f0f0f', border: 'none',
-              padding: '14px 32px', fontSize: 10, fontWeight: 800,
-              letterSpacing: '0.18em', textTransform: 'uppercase', cursor: 'pointer',
-              whiteSpace: 'nowrap'
-            }}>
+            <button
+              onClick={() => onNavigate('booking')}
+              style={{
+                background: '#c8a96e', color: '#0f0f0f', border: 'none',
+                padding: '14px 32px', fontSize: 10, fontWeight: 800,
+                letterSpacing: '0.18em', textTransform: 'uppercase', cursor: 'pointer',
+                whiteSpace: 'nowrap'
+              }}>
               Book Spa Treatments
             </button>
             <button style={{
@@ -297,6 +304,7 @@ export function SpaWireframe() {
         </div>
       </div>
 
+      <Footer onNavigate={onNavigate} />
     </div>
   );
 }

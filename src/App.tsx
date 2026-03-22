@@ -21,6 +21,11 @@ export default function App() {
   const [tab, setTab] = useState('audit');
   const activeTab = TABS.find(t => t.id === tab)!;
 
+  const navigate = (id: string) => {
+    setTab(id);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div style={{ minHeight: '100vh', background: '#f0f2f5', fontFamily: 'DM Sans, Inter, system-ui' }}>
 
@@ -31,7 +36,11 @@ export default function App() {
         borderBottom: '1px solid #1e1e1e'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-          <span className="font-playfair" style={{ color: '#fff', fontSize: 15, fontWeight: 600, letterSpacing: '0.02em' }}>
+          <span
+            className="font-playfair"
+            onClick={() => navigate('home')}
+            style={{ color: '#fff', fontSize: 15, fontWeight: 600, letterSpacing: '0.02em', cursor: 'pointer' }}
+          >
             BLUEBAY <span style={{ color: '#c8a96e' }}>HOTELS</span>
           </span>
           <div style={{ width: 1, height: 16, background: '#333' }} />
@@ -40,7 +49,12 @@ export default function App() {
         <div style={{ display: 'flex', gap: 28, alignItems: 'center' }}>
           <div style={{ textAlign: 'right' }}>
             <div style={{ color: '#555', fontSize: 9, textTransform: 'uppercase', letterSpacing: '0.18em' }}>Overall Score</div>
-            <div style={{ color: '#dc2626', fontSize: 18, fontWeight: 800, lineHeight: 1.2, fontFamily: 'Playfair Display, serif' }}>42<span style={{ fontSize: 11, color: '#444', fontWeight: 400 }}>/100</span></div>
+            <div
+              onClick={() => navigate('audit')}
+              style={{ color: '#dc2626', fontSize: 18, fontWeight: 800, lineHeight: 1.2, fontFamily: 'Playfair Display, serif', cursor: 'pointer' }}
+            >
+              42<span style={{ fontSize: 11, color: '#444', fontWeight: 400 }}>/100</span>
+            </div>
           </div>
           <div style={{ width: 1, height: 28, background: '#222' }} />
           <div style={{ textAlign: 'right' }}>
@@ -62,7 +76,7 @@ export default function App() {
           return (
             <button
               key={t.id}
-              onClick={() => setTab(t.id)}
+              onClick={() => navigate(t.id)}
               style={{
                 display: 'flex', alignItems: 'center', gap: 7,
                 padding: '16px 20px', border: 'none', background: 'transparent',
@@ -77,16 +91,10 @@ export default function App() {
               <Icon size={13} strokeWidth={isActive ? 2.5 : 1.5} />
               {t.label}
               {t.id === 'audit' && (
-                <span style={{
-                  background: '#dc2626', color: '#fff', fontSize: 9, fontWeight: 800,
-                  padding: '2px 6px', marginLeft: 2, letterSpacing: '0.06em'
-                }}>12</span>
+                <span style={{ background: '#dc2626', color: '#fff', fontSize: 9, fontWeight: 800, padding: '2px 6px', marginLeft: 2, letterSpacing: '0.06em' }}>12</span>
               )}
               {(t.id === 'dining' || t.id === 'spa') && (
-                <span style={{
-                  background: '#0f0f0f', color: '#fff', fontSize: 9, fontWeight: 800,
-                  padding: '2px 6px', marginLeft: 2, letterSpacing: '0.06em'
-                }}>NEW</span>
+                <span style={{ background: '#0f0f0f', color: '#fff', fontSize: 9, fontWeight: 800, padding: '2px 6px', marginLeft: 2, letterSpacing: '0.06em' }}>NEW</span>
               )}
             </button>
           );
@@ -94,10 +102,7 @@ export default function App() {
       </div>
 
       {/* Context bar */}
-      <div style={{
-        background: '#fafaf8', borderBottom: '1px solid #e8e8e8',
-        padding: '8px 32px', display: 'flex', alignItems: 'center', gap: 10
-      }}>
+      <div style={{ background: '#fafaf8', borderBottom: '1px solid #e8e8e8', padding: '8px 32px', display: 'flex', alignItems: 'center', gap: 10 }}>
         <activeTab.Icon size={12} color="#aaa" strokeWidth={1.5} />
         <span style={{ fontSize: 11, color: '#aaa', letterSpacing: '0.06em' }}>
           {activeTab.id === 'audit'
@@ -116,11 +121,11 @@ export default function App() {
           transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
         >
           {tab === 'audit'   && <AuditReport />}
-          {tab === 'home'    && <HomepageWireframe />}
-          {tab === 'rooms'   && <RoomsWireframe />}
-          {tab === 'dining'  && <DiningWireframe />}
-          {tab === 'spa'     && <SpaWireframe />}
-          {tab === 'booking' && <BookingWireframe />}
+          {tab === 'home'    && <HomepageWireframe onNavigate={navigate} />}
+          {tab === 'rooms'   && <RoomsWireframe    onNavigate={navigate} />}
+          {tab === 'dining'  && <DiningWireframe   onNavigate={navigate} />}
+          {tab === 'spa'     && <SpaWireframe      onNavigate={navigate} />}
+          {tab === 'booking' && <BookingWireframe  onNavigate={navigate} />}
         </motion.div>
       </AnimatePresence>
 

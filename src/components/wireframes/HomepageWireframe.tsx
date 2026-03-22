@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Search, Star, ArrowRight, ChevronDown } from 'lucide-react';
+import { Footer } from './Footer';
 
 const ROOMS = [
   { name: 'Garden View Room',  from: '$220', desc: 'Private verandah, tropical gardens, mosquito-net canopy bed.' },
@@ -22,7 +23,9 @@ const OFFERS = [
 
 const NAV = ['Our Resorts', 'Rooms & Suites', 'Dining', 'Spa & Wellness', 'Experiences', 'Offers'];
 
-export function HomepageWireframe() {
+interface Props { onNavigate: (tab: string) => void; }
+
+export function HomepageWireframe({ onNavigate }: Props) {
   const [slide, setSlide] = useState(0);
   const [hoveredRoom, setHoveredRoom] = useState<number | null>(null);
   const [hoveredOffer, setHoveredOffer] = useState<number | null>(null);
@@ -52,27 +55,38 @@ export function HomepageWireframe() {
         </div>
 
         <nav style={{ display: 'flex', flex: 1, paddingLeft: 32 }}>
-          {NAV.map((item, i) => (
-            <div key={item} style={{
-              padding: '20px 16px', fontSize: 12, letterSpacing: '0.06em',
-              color: i === 5 ? '#c8a96e' : '#555',
-              cursor: 'pointer', whiteSpace: 'nowrap',
-              display: 'flex', alignItems: 'center', gap: 4,
-              borderBottom: i === 5 ? '1px solid #c8a96e' : '1px solid transparent',
-              textTransform: 'uppercase'
-            }}>
-              {item}
-              {i < 3 && <ChevronDown size={11} strokeWidth={1.5} />}
-            </div>
-          ))}
+          {NAV.map((item, i) => {
+            const TAB_MAP: Record<string, string> = {
+              'Our Resorts': 'home', 'Rooms & Suites': 'rooms',
+              'Dining': 'dining', 'Spa & Wellness': 'spa',
+              'Experiences': 'home', 'Offers': 'home',
+            };
+            return (
+              <div key={item}
+                onClick={() => onNavigate(TAB_MAP[item] ?? 'home')}
+                style={{
+                  padding: '20px 16px', fontSize: 12, letterSpacing: '0.06em',
+                  color: i === 5 ? '#c8a96e' : '#555',
+                  cursor: 'pointer', whiteSpace: 'nowrap',
+                  display: 'flex', alignItems: 'center', gap: 4,
+                  borderBottom: i === 5 ? '1px solid #c8a96e' : '1px solid transparent',
+                  textTransform: 'uppercase'
+                }}>
+                {item}
+                {i < 3 && <ChevronDown size={11} strokeWidth={1.5} />}
+              </div>
+            );
+          })}
         </nav>
 
-        <button style={{
-          background: '#0f0f0f', color: '#fff', border: 'none',
-          padding: '11px 24px', fontSize: 11, fontWeight: 700,
-          letterSpacing: '0.12em', textTransform: 'uppercase', cursor: 'pointer',
-          marginLeft: 'auto'
-        }}>
+        <button
+          onClick={() => onNavigate('booking')}
+          style={{
+            background: '#0f0f0f', color: '#fff', border: 'none',
+            padding: '11px 24px', fontSize: 11, fontWeight: 700,
+            letterSpacing: '0.12em', textTransform: 'uppercase', cursor: 'pointer',
+            marginLeft: 'auto'
+          }}>
           Book Direct
         </button>
       </div>
@@ -163,12 +177,14 @@ export function HomepageWireframe() {
                 </div>
               </div>
             ))}
-            <button style={{
-              background: '#0a4a6b', color: '#fff', border: 'none',
-              padding: '0 28px', display: 'flex', alignItems: 'center', gap: 8,
-              fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase',
-              cursor: 'pointer', whiteSpace: 'nowrap'
-            }}>
+            <button
+              onClick={() => onNavigate('booking')}
+              style={{
+                background: '#0a4a6b', color: '#fff', border: 'none',
+                padding: '0 28px', display: 'flex', alignItems: 'center', gap: 8,
+                fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase',
+                cursor: 'pointer', whiteSpace: 'nowrap'
+              }}>
               <Search size={14} strokeWidth={2} />
               Check Availability
             </button>
@@ -216,12 +232,14 @@ export function HomepageWireframe() {
               Your Perfect Retreat
             </h2>
           </div>
-          <button style={{
-            display: 'flex', alignItems: 'center', gap: 6, background: 'transparent',
-            border: 'none', color: '#0f0f0f', fontSize: 11, fontWeight: 700,
-            letterSpacing: '0.12em', textTransform: 'uppercase', cursor: 'pointer',
-            borderBottom: '1px solid #0f0f0f', paddingBottom: 2
-          }}>
+          <button
+            onClick={() => onNavigate('rooms')}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 6, background: 'transparent',
+              border: 'none', color: '#0f0f0f', fontSize: 11, fontWeight: 700,
+              letterSpacing: '0.12em', textTransform: 'uppercase', cursor: 'pointer',
+              borderBottom: '1px solid #0f0f0f', paddingBottom: 2
+            }}>
             View All Rooms <ArrowRight size={13} strokeWidth={2} />
           </button>
         </div>
@@ -276,11 +294,13 @@ export function HomepageWireframe() {
                 <div className="font-playfair" style={{ fontSize: 28, fontWeight: 600, color: '#0a4a6b' }}>{room.from}</div>
                 <div style={{ fontSize: 11, color: '#aaa' }}>per night</div>
               </div>
-              <button style={{
-                background: '#0a4a6b', color: '#fff', border: 'none',
-                padding: '10px 20px', fontSize: 11, fontWeight: 700,
-                letterSpacing: '0.1em', textTransform: 'uppercase', cursor: 'pointer'
-              }}>
+              <button
+                onClick={() => onNavigate('booking')}
+                style={{
+                  background: '#0a4a6b', color: '#fff', border: 'none',
+                  padding: '10px 20px', fontSize: 11, fontWeight: 700,
+                  letterSpacing: '0.1em', textTransform: 'uppercase', cursor: 'pointer'
+                }}>
                 Book
               </button>
             </div>
@@ -328,8 +348,9 @@ export function HomepageWireframe() {
             <div style={{ fontSize: 12, color: '#888', letterSpacing: '0.06em', position: 'relative', zIndex: 1 }}>{offer.nights}</div>
             <div style={{ display: 'flex', justifyContent: 'flex-end', position: 'relative', zIndex: 1 }}>
               <motion.div
+                onClick={() => onNavigate('booking')}
                 animate={{ x: hoveredOffer === i ? 0 : -8, opacity: hoveredOffer === i ? 1 : 0.3 }}
-                style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#c8a96e', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 700 }}
+                style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#c8a96e', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 700, cursor: 'pointer' }}
               >
                 View Package <ArrowRight size={13} />
               </motion.div>
@@ -395,11 +416,13 @@ export function HomepageWireframe() {
         <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, marginBottom: 36, letterSpacing: '0.02em' }}>
           Book direct and receive our best rates — exclusively on this website.
         </p>
-        <button style={{
-          background: '#c8a96e', color: '#0f0f0f', border: 'none',
-          padding: '16px 40px', fontSize: 11, fontWeight: 800,
-          letterSpacing: '0.18em', textTransform: 'uppercase', cursor: 'pointer'
-        }}>
+        <button
+          onClick={() => onNavigate('booking')}
+          style={{
+            background: '#c8a96e', color: '#0f0f0f', border: 'none',
+            padding: '16px 40px', fontSize: 11, fontWeight: 800,
+            letterSpacing: '0.18em', textTransform: 'uppercase', cursor: 'pointer'
+          }}>
           Check Availability
         </button>
         <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: 11, marginTop: 16, letterSpacing: '0.04em' }}>
@@ -407,6 +430,7 @@ export function HomepageWireframe() {
         </p>
       </div>
 
+      <Footer onNavigate={onNavigate} />
     </div>
   );
 }
