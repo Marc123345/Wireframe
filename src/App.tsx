@@ -26,36 +26,35 @@ export default function App() {
 
       {/* Top masthead */}
       <div style={{
-        background: '#111', padding: '14px 32px',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between'
+        background: '#0f0f0f', padding: '14px 32px',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        borderBottom: '1px solid #1e1e1e'
       }}>
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ color: '#fff', fontSize: 15, fontWeight: 700 }}>Bluebay Hotels Zanzibar</span>
-            <span style={{ color: '#6b7280', fontSize: 13 }}>·</span>
-            <span style={{ color: '#6b7280', fontSize: 13 }}>UX/UI Audit & Wireframes</span>
-          </div>
-          <div style={{ color: '#4b5563', fontSize: 11, marginTop: 2 }}>March 2026 · bluebayhotelszanzibar.com</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+          <span className="font-playfair" style={{ color: '#fff', fontSize: 15, fontWeight: 600, letterSpacing: '0.02em' }}>
+            BLUEBAY <span style={{ color: '#c8a96e' }}>HOTELS</span>
+          </span>
+          <div style={{ width: 1, height: 16, background: '#333' }} />
+          <span style={{ color: '#555', fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase' }}>UX / UI Audit & Wireframes — March 2026</span>
         </div>
-        <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: 28, alignItems: 'center' }}>
           <div style={{ textAlign: 'right' }}>
-            <div style={{ color: '#9ca3af', fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Overall Score</div>
-            <div style={{ color: '#dc2626', fontSize: 20, fontWeight: 800, lineHeight: 1 }}>42<span style={{ fontSize: 12, color: '#4b5563', fontWeight: 400 }}>/100</span></div>
+            <div style={{ color: '#555', fontSize: 9, textTransform: 'uppercase', letterSpacing: '0.18em' }}>Overall Score</div>
+            <div style={{ color: '#dc2626', fontSize: 18, fontWeight: 800, lineHeight: 1.2, fontFamily: 'Playfair Display, serif' }}>42<span style={{ fontSize: 11, color: '#444', fontWeight: 400 }}>/100</span></div>
           </div>
-          <div style={{ width: 1, height: 36, background: '#2a2a2a' }} />
+          <div style={{ width: 1, height: 28, background: '#222' }} />
           <div style={{ textAlign: 'right' }}>
-            <div style={{ color: '#9ca3af', fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Issues Found</div>
-            <div style={{ color: '#f59e0b', fontSize: 20, fontWeight: 800, lineHeight: 1 }}>12</div>
+            <div style={{ color: '#555', fontSize: 9, textTransform: 'uppercase', letterSpacing: '0.18em' }}>Issues</div>
+            <div style={{ color: '#c8a96e', fontSize: 18, fontWeight: 800, lineHeight: 1.2, fontFamily: 'Playfair Display, serif' }}>12</div>
           </div>
         </div>
       </div>
 
       {/* Tab bar */}
       <div style={{
-        background: '#fff', borderBottom: '1px solid #e5e7eb',
-        padding: '0 32px', display: 'flex', alignItems: 'center', gap: 2,
+        background: '#fff', borderBottom: '1px solid #e8e8e8',
+        padding: '0 32px', display: 'flex', alignItems: 'center', gap: 0,
         overflowX: 'auto', position: 'sticky', top: 0, zIndex: 100,
-        boxShadow: '0 1px 8px rgba(0,0,0,0.06)'
       }}>
         {TABS.map(t => {
           const Icon = t.Icon;
@@ -66,25 +65,27 @@ export default function App() {
               onClick={() => setTab(t.id)}
               style={{
                 display: 'flex', alignItems: 'center', gap: 7,
-                padding: '14px 20px', border: 'none', background: 'transparent',
-                fontSize: 13, fontWeight: isActive ? 700 : 400, cursor: 'pointer',
-                color: isActive ? t.color : '#6b7280', whiteSpace: 'nowrap',
-                borderBottom: isActive ? `3px solid ${t.color}` : '3px solid transparent',
+                padding: '16px 20px', border: 'none', background: 'transparent',
+                fontSize: 11, fontWeight: isActive ? 700 : 400,
+                letterSpacing: '0.08em', textTransform: 'uppercase',
+                cursor: 'pointer',
+                color: isActive ? '#0f0f0f' : '#999', whiteSpace: 'nowrap',
+                borderBottom: isActive ? '2px solid #0f0f0f' : '2px solid transparent',
                 marginBottom: -1, transition: 'all 0.18s'
               }}
             >
-              <Icon size={15} />
+              <Icon size={13} strokeWidth={isActive ? 2.5 : 1.5} />
               {t.label}
               {t.id === 'audit' && (
                 <span style={{
-                  background: '#dc2626', color: '#fff', fontSize: 10, fontWeight: 700,
-                  padding: '1px 6px', borderRadius: 10, marginLeft: 2
+                  background: '#dc2626', color: '#fff', fontSize: 9, fontWeight: 800,
+                  padding: '2px 6px', marginLeft: 2, letterSpacing: '0.06em'
                 }}>12</span>
               )}
               {(t.id === 'dining' || t.id === 'spa') && (
                 <span style={{
-                  background: '#0d7a5f', color: '#fff', fontSize: 10, fontWeight: 700,
-                  padding: '1px 6px', borderRadius: 10, marginLeft: 2
+                  background: '#0f0f0f', color: '#fff', fontSize: 9, fontWeight: 800,
+                  padding: '2px 6px', marginLeft: 2, letterSpacing: '0.06em'
                 }}>NEW</span>
               )}
             </button>
@@ -94,15 +95,14 @@ export default function App() {
 
       {/* Context bar */}
       <div style={{
-        background: activeTab.id === 'audit' ? '#fef2f2' : '#f0f8ff',
-        borderBottom: `2px solid ${activeTab.color}20`,
-        padding: '10px 32px', display: 'flex', alignItems: 'center', gap: 10
+        background: '#fafaf8', borderBottom: '1px solid #e8e8e8',
+        padding: '8px 32px', display: 'flex', alignItems: 'center', gap: 10
       }}>
-        <activeTab.Icon size={14} color={activeTab.color} />
-        <span style={{ fontSize: 12, color: activeTab.color, fontWeight: 600 }}>
+        <activeTab.Icon size={12} color="#aaa" strokeWidth={1.5} />
+        <span style={{ fontSize: 11, color: '#aaa', letterSpacing: '0.06em' }}>
           {activeTab.id === 'audit'
-            ? 'UX/UI Audit Report — Issues, scores, and recommendations for bluebayhotelszanzibar.com'
-            : `Wireframe: Proposed ${activeTab.label} — Redesign recommendation with improved UX and conversion`}
+            ? 'UX/UI Audit Report — 12 issues, scored across 8 categories with fix recommendations'
+            : `Wireframe — Proposed ${activeTab.label} redesign for improved UX and direct booking conversion`}
         </span>
       </div>
 

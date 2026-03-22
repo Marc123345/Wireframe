@@ -1,186 +1,173 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { useState } from 'react';
-import { Clock, ArrowRight, Star, Droplets, Wind, Flame, Sparkles, Heart } from 'lucide-react';
+import { Clock, ArrowRight, Check } from 'lucide-react';
 
-const CATEGORIES = ['All Treatments', 'Massages', 'Facials', 'Body Rituals', 'Couples'];
+const CATEGORIES = ['All', 'Massages', 'Facials', 'Body Rituals', 'Couples'];
 
 const TREATMENTS = [
   {
-    id: 't1',
-    category: 'Massages',
+    id: 't1', category: 'Massages',
     name: 'Zanzibar Spice Massage',
-    duration: '90 min',
-    price: 120,
-    rating: 4.9,
+    duration: '90 min', price: 120,
     tag: 'Signature',
-    tagColor: '#c8a96e',
-    desc: 'Our flagship massage — warm clove and cardamom oils combined with traditional Swahili techniques. A deeply restorative journey through the island\'s ancient spice heritage.',
+    desc: 'Our flagship treatment — warm clove and cardamom oils blended with traditional Swahili massage techniques. A deeply restorative journey through the island\'s spice heritage.',
     benefits: ['Deep muscle relief', 'Aromatic therapy', 'Improves circulation'],
   },
   {
-    id: 't2',
-    category: 'Massages',
+    id: 't2', category: 'Massages',
     name: 'Ocean Drift Massage',
-    duration: '60 min',
-    price: 85,
-    rating: 4.8,
+    duration: '60 min', price: 85,
     tag: null,
-    tagColor: '',
-    desc: 'Performed in our sea-facing massage rooms, the rhythm of the ocean complements a medium-pressure full-body massage using cold-pressed coconut oil.',
-    benefits: ['Ocean views', 'Stress relief', 'Coconut oil treatment'],
+    desc: 'Performed in our sea-facing suites, the rhythm of the ocean accompanies a full-body massage using cold-pressed coconut oil. Medium pressure. Deeply restorative.',
+    benefits: ['Ocean views', 'Coconut oil', 'Stress relief'],
   },
   {
-    id: 't3',
-    category: 'Couples',
+    id: 't3', category: 'Couples',
     name: 'Sunset Couples Ritual',
-    duration: '120 min',
-    price: 260,
-    rating: 5.0,
-    tag: 'Most Booked',
-    tagColor: '#e05a3a',
-    desc: 'An exclusively designed experience for two — side-by-side ocean-view massage suites, private champagne and canapés, a shared bath ritual, and sunset cocktails on the spa terrace.',
-    benefits: ['Private suite', 'Champagne & canapés', 'Sunset cocktails', 'Romantic ritual'],
+    duration: '120 min', price: 260,
+    tag: 'Most Requested',
+    desc: 'Side-by-side ocean-view suites, champagne and canapés, a shared bath ritual, and sunset cocktails on the spa terrace. Designed exclusively for two.',
+    benefits: ['Private suite', 'Champagne & canapés', 'Sunset cocktails', 'Bath ritual'],
   },
   {
-    id: 't4',
-    category: 'Facials',
+    id: 't4', category: 'Facials',
     name: 'Coral Brightening Facial',
-    duration: '75 min',
-    price: 95,
-    rating: 4.7,
+    duration: '75 min', price: 95,
     tag: null,
-    tagColor: '',
-    desc: 'A rejuvenating facial using sustainably harvested marine extracts and Zanzibar aloe vera. Brightens skin tone and deeply hydrates for a radiant island glow.',
-    benefits: ['Marine extracts', 'Deep hydration', 'Brightening effect'],
+    desc: 'Marine extracts and Zanzibar aloe vera work together to brighten skin tone and deliver deep hydration. Leaves skin luminous and renewed.',
+    benefits: ['Marine extracts', 'Deep hydration', 'Brightening'],
   },
   {
-    id: 't5',
-    category: 'Body Rituals',
+    id: 't5', category: 'Body Rituals',
     name: 'Spice Island Scrub & Wrap',
-    duration: '105 min',
-    price: 140,
-    rating: 4.8,
+    duration: '105 min', price: 140,
     tag: 'New',
-    tagColor: '#0d7a5f',
-    desc: 'A full-body exfoliation with hand-blended Zanzibari spice scrub, followed by a nourishing warm oil body wrap. Leaves skin silky, fragrant, and renewed.',
-    benefits: ['Full-body exfoliation', 'Nourishing wrap', 'Spice oil blend'],
+    desc: 'A full-body exfoliation with hand-blended Zanzibari spice scrub, followed by a warm oil body wrap. Skin is left silky, fragrant, and completely renewed.',
+    benefits: ['Full-body exfoliation', 'Spice oil blend', 'Nourishing wrap'],
   },
   {
-    id: 't6',
-    category: 'Massages',
+    id: 't6', category: 'Massages',
     name: 'Hot Stone Therapy',
-    duration: '80 min',
-    price: 105,
-    rating: 4.8,
+    duration: '80 min', price: 105,
     tag: null,
-    tagColor: '',
-    desc: 'Smooth volcanic stones heated to therapeutic temperatures, placed on key tension points and used in flowing massage strokes to melt away deep muscle tension.',
-    benefits: ['Volcanic stone therapy', 'Deep tension relief', 'Calming heat'],
+    desc: 'Volcanic stones heated to therapeutic temperature are placed on key tension points and used in long flowing strokes to melt away deep muscle tightness.',
+    benefits: ['Volcanic stones', 'Deep tension relief', 'Calming heat'],
   },
 ];
 
 const FACILITIES = [
-  { icon: Droplets, label: 'Sea-Facing Pools' },
-  { icon: Flame, label: 'Sauna & Steam' },
-  { icon: Wind, label: 'Open-Air Cabanas' },
-  { icon: Sparkles, label: 'Spa Tub' },
-  { icon: Heart, label: 'Couples Suites' },
-  { icon: Star, label: 'Relaxation Lounge' },
+  { label: 'Sea-facing massage suites' },
+  { label: 'Sauna & steam room' },
+  { label: 'Open-air relaxation cabanas' },
+  { label: 'Spa hydrotherapy tub' },
+  { label: 'Private couples suites' },
+  { label: 'Spa lounge & refreshments' },
 ];
 
 export function SpaWireframe() {
-  const [activeCategory, setActiveCategory] = useState('All Treatments');
-  const [selected, setSelected] = useState<string | null>(null);
+  const [activeCategory, setActiveCategory] = useState('All');
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   const filtered = TREATMENTS.filter(t =>
-    activeCategory === 'All Treatments' ? true : t.category === activeCategory
+    activeCategory === 'All' ? true : t.category === activeCategory
   );
 
   return (
-    <div style={{ fontFamily: 'DM Sans, Inter, system-ui', background: '#f8fafc' }}>
+    <div style={{ fontFamily: 'DM Sans, Inter, system-ui', background: '#fff', color: '#0f0f0f' }}>
 
       {/* Annotation */}
-      <div style={{ background: '#0a4a6b', padding: '10px 32px' }}>
-        <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: 12, margin: 0, textAlign: 'center', letterSpacing: '0.1em' }}>
-          WIREFRAME: Spa & Wellness Page — New Page (Currently Missing from Site)
-        </p>
+      <div style={{ background: '#0f0f0f', padding: '8px 32px', textAlign: 'center' }}>
+        <span style={{ color: '#666', fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase' }}>
+          Wireframe — Spa & Wellness Page (New — Currently Missing from Site)
+        </span>
       </div>
 
       {/* Hero */}
-      <div style={{
-        background: 'linear-gradient(135deg, #1a1a2e 0%, #0d4d40 60%, #0a4a6b 100%)',
-        padding: '72px 32px 80px', position: 'relative', overflow: 'hidden'
-      }}>
-        {/* Ghost text */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', minHeight: 500 }}>
+        {/* Left — image */}
         <div style={{
-          position: 'absolute', right: -20, bottom: -20,
-          fontFamily: 'Playfair Display, serif', fontSize: 'clamp(80px,16vw,220px)',
-          color: 'rgba(255,255,255,0.03)', lineHeight: 1, fontWeight: 700, pointerEvents: 'none',
-          userSelect: 'none', letterSpacing: '-0.02em'
-        }}>OASIS</div>
-
-        <div style={{ maxWidth: 1100, margin: '0 auto', position: 'relative', zIndex: 2 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-            <div style={{ height: 1, width: 28, background: 'var(--bb-sand)' }} />
-            <span style={{ color: 'var(--bb-sand)', fontSize: 11, letterSpacing: '0.3em', textTransform: 'uppercase' }}>
-              Oasis Spa & Wellness
+          background: '#1a1a1a', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          position: 'relative'
+        }}>
+          <span style={{ fontSize: 10, color: '#333', letterSpacing: '0.2em', textTransform: 'uppercase' }}>
+            Oasis Spa Photography
+          </span>
+          <div style={{ position: 'absolute', bottom: 24, left: 32 }}>
+            <div style={{ width: 32, height: 1, background: '#c8a96e', marginBottom: 12 }} />
+            <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase' }}>
+              Beachfront · Kiwengwa
             </span>
           </div>
-          <h1 className="font-playfair" style={{ color: '#fff', fontSize: 'clamp(28px,4.5vw,58px)', margin: '0 0 14px', fontWeight: 600, lineHeight: 1.1 }}>
-            Sanctuary for the<br />
-            <span style={{ color: 'var(--bb-sand)' }}>Senses & Soul.</span>
+        </div>
+
+        {/* Right — text */}
+        <div style={{ background: '#fafaf8', padding: '64px 52px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+            <div style={{ width: 24, height: 1, background: '#c8a96e' }} />
+            <span style={{ fontSize: 10, color: '#c8a96e', letterSpacing: '0.28em', textTransform: 'uppercase' }}>Oasis Spa & Wellness</span>
+          </div>
+          <h1 className="font-playfair" style={{ fontSize: 'clamp(30px,4vw,52px)', fontWeight: 600, margin: '0 0 20px', lineHeight: 1.1 }}>
+            Sanctuary for the<br />Senses & Soul.
           </h1>
-          <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 16, maxWidth: 540, margin: '0 0 36px', lineHeight: 1.7 }}>
-            Nestled at the ocean's edge, the Oasis Spa blends ancient Swahili healing traditions with modern luxury — an escape within an escape.
+          <p style={{ fontSize: 14, color: '#666', lineHeight: 1.8, margin: '0 0 36px' }}>
+            Nestled at the ocean's edge, the Oasis Spa blends ancient Swahili healing traditions with modern luxury. An escape within an escape — idyllically positioned right on the beach.
           </p>
 
-          {/* Facilities strip */}
-          <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
-            {FACILITIES.map(f => {
-              const Icon = f.icon;
-              return (
-                <div key={f.label} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <Icon size={15} color="var(--bb-sand)" />
-                  <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: 13 }}>{f.label}</span>
-                </div>
-              );
-            })}
+          {/* Stats */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 0, borderTop: '1px solid #e8e8e8', paddingTop: 28 }}>
+            {[
+              { value: '18+', label: 'Treatments' },
+              { value: '5',   label: 'Private Suites' },
+              { value: '4.9', label: 'Guest Rating' },
+            ].map((s, i) => (
+              <div key={s.label} style={{ paddingRight: 24, borderRight: i < 2 ? '1px solid #e8e8e8' : 'none', paddingLeft: i > 0 ? 24 : 0 }}>
+                <div className="font-playfair" style={{ fontSize: 32, fontWeight: 600, color: '#0a4a6b', lineHeight: 1 }}>{s.value}</div>
+                <div style={{ fontSize: 10, color: '#aaa', letterSpacing: '0.15em', textTransform: 'uppercase', marginTop: 4 }}>{s.label}</div>
+              </div>
+            ))}
           </div>
-        </div>
-      </div>
 
-      {/* Stats band */}
-      <div style={{ background: 'var(--bb-sand)', padding: '20px 32px' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', justifyContent: 'center', gap: 60, flexWrap: 'wrap' }}>
-          {[
-            { value: '18+', label: 'Treatments' },
-            { value: '5', label: 'Treatment Suites' },
-            { value: '4.9', label: 'Average Rating' },
-            { value: '100%', label: 'Natural Ingredients' },
-          ].map(s => (
-            <div key={s.label} style={{ textAlign: 'center' }}>
-              <div className="font-playfair" style={{ fontSize: 28, fontWeight: 700, color: '#1a1a1a' }}>{s.value}</div>
-              <div style={{ fontSize: 11, color: 'rgba(0,0,0,0.6)', textTransform: 'uppercase', letterSpacing: '0.12em', marginTop: 2 }}>{s.label}</div>
+          {/* Facilities */}
+          <div style={{ marginTop: 28 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+              {FACILITIES.map(f => (
+                <div key={f.label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <div style={{ width: 3, height: 3, background: '#c8a96e', flexShrink: 0 }} />
+                  <span style={{ fontSize: 12, color: '#555' }}>{f.label}</span>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </div>
 
       {/* Treatments */}
-      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '56px 32px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28, flexWrap: 'wrap', gap: 16 }}>
-          <h2 className="font-playfair" style={{ fontSize: 28, color: '#111', margin: 0, fontWeight: 600 }}>Our Treatments</h2>
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            {CATEGORIES.map(cat => (
+      <div style={{ padding: '72px 40px' }}>
+        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 40 }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
+              <div style={{ width: 24, height: 1, background: '#c8a96e' }} />
+              <span style={{ fontSize: 10, color: '#c8a96e', letterSpacing: '0.28em', textTransform: 'uppercase' }}>Treatment Menu</span>
+            </div>
+            <h2 className="font-playfair" style={{ fontSize: 'clamp(26px,3.5vw,44px)', fontWeight: 600, margin: 0, lineHeight: 1.1 }}>
+              Our Treatments
+            </h2>
+          </div>
+
+          {/* Category filter */}
+          <div style={{ display: 'flex', gap: 0, border: '1px solid #e8e8e8' }}>
+            {CATEGORIES.map((cat, i) => (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
                 style={{
-                  padding: '7px 16px', borderRadius: 20, border: 'none', cursor: 'pointer',
-                  fontSize: 13, fontWeight: activeCategory === cat ? 600 : 400,
-                  background: activeCategory === cat ? '#0d4d40' : '#f3f4f6',
-                  color: activeCategory === cat ? '#fff' : '#4b5563',
-                  transition: 'all 0.2s'
+                  padding: '9px 18px', border: 'none', cursor: 'pointer',
+                  fontSize: 11, fontWeight: activeCategory === cat ? 700 : 400,
+                  letterSpacing: '0.08em', textTransform: 'uppercase',
+                  background: activeCategory === cat ? '#0f0f0f' : '#fff',
+                  color: activeCategory === cat ? '#fff' : '#888',
+                  borderRight: i < CATEGORIES.length - 1 ? '1px solid #e8e8e8' : 'none',
+                  transition: 'all 0.18s'
                 }}
               >
                 {cat}
@@ -189,113 +176,125 @@ export function SpaWireframe() {
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }}>
-          {filtered.map((t, i) => (
-            <motion.div
-              key={t.id}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.07 }}
-              style={{
-                background: '#fff', borderRadius: 12, overflow: 'hidden',
-                border: selected === t.id ? '2px solid #0d4d40' : '1px solid #e5e7eb',
-                cursor: 'pointer'
-              }}
-              onClick={() => setSelected(selected === t.id ? null : t.id)}
-            >
-              {/* Image placeholder */}
-              <div style={{
-                height: 160, background: 'linear-gradient(135deg, #0d4d4099, #0a4a6b88)',
-                position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center'
-              }}>
-                <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase' }}>
-                  Treatment Photo
-                </span>
-                {t.tag && (
-                  <div style={{
-                    position: 'absolute', top: 12, left: 12,
-                    background: t.tagColor, color: t.tagColor === '#c8a96e' ? '#1a1a1a' : '#fff',
-                    fontSize: 10, fontWeight: 700, padding: '4px 10px', borderRadius: 4
-                  }}>{t.tag}</div>
-                )}
+        {/* Treatment rows */}
+        {filtered.map((t, i) => (
+          <motion.div
+            key={t.id}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: i * 0.05 }}
+            onHoverStart={() => setHoveredId(t.id)}
+            onHoverEnd={() => setHoveredId(null)}
+            style={{
+              display: 'grid', gridTemplateColumns: '200px 1fr auto',
+              borderTop: '1px solid #e8e8e8',
+              borderBottom: i === filtered.length - 1 ? '1px solid #e8e8e8' : 'none',
+              background: hoveredId === t.id ? '#fafaf8' : '#fff',
+              transition: 'background 0.2s', cursor: 'pointer'
+            }}
+          >
+            {/* Image stub */}
+            <div style={{
+              height: 140, background: '#f0f0ee', margin: '20px 0',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative'
+            }}>
+              {t.tag && (
+                <div style={{
+                  position: 'absolute', top: 0, left: 0,
+                  background: '#0a4a6b', color: '#fff',
+                  fontSize: 9, fontWeight: 800, padding: '4px 10px',
+                  letterSpacing: '0.12em', textTransform: 'uppercase'
+                }}>{t.tag}</div>
+              )}
+              <span style={{ fontSize: 9, color: '#ccc', letterSpacing: '0.2em', textTransform: 'uppercase' }}>Photo</span>
+            </div>
+
+            {/* Content */}
+            <div style={{ padding: '24px 32px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
+                <span style={{ fontSize: 10, color: '#aaa', letterSpacing: '0.15em', textTransform: 'uppercase' }}>{t.category}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                  <Clock size={11} color="#aaa" />
+                  <span style={{ fontSize: 11, color: '#aaa' }}>{t.duration}</span>
+                </div>
               </div>
+              <h3 className="font-playfair" style={{ fontSize: 20, fontWeight: 600, margin: '0 0 8px' }}>{t.name}</h3>
+              <p style={{ fontSize: 13, color: '#666', lineHeight: 1.7, margin: '0 0 14px' }}>{t.desc}</p>
 
-              <div style={{ padding: '20px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
-                  <h3 style={{ fontSize: 15, fontWeight: 700, color: '#111', margin: 0, lineHeight: 1.3 }}>{t.name}</h3>
-                  <div style={{ textAlign: 'right', flexShrink: 0, marginLeft: 8 }}>
-                    <div style={{ fontSize: 18, fontWeight: 800, color: '#0d4d40' }}>${t.price}</div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 3, justifyContent: 'flex-end' }}>
-                      <Star size={11} fill="#f59e0b" color="#f59e0b" />
-                      <span style={{ fontSize: 11, color: '#6b7280' }}>{t.rating}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 10 }}>
-                  <Clock size={12} color="#9ca3af" />
-                  <span style={{ fontSize: 12, color: '#6b7280' }}>{t.duration}</span>
-                  <span style={{ fontSize: 12, color: '#d1d5db', margin: '0 4px' }}>·</span>
-                  <span style={{ fontSize: 12, color: '#6b7280' }}>{t.category}</span>
-                </div>
-
-                <p style={{ fontSize: 13, color: '#4b5563', lineHeight: 1.6, marginBottom: 14 }}>{t.desc}</p>
-
-                <AnimatePresence>
-                  {selected === t.id && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      style={{ overflow: 'hidden', marginBottom: 14 }}
-                    >
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 5, padding: '10px', background: '#f0fdf4', borderRadius: 8 }}>
-                        {t.benefits.map(b => (
-                          <div key={b} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                            <Sparkles size={11} color="#0d7a5f" />
-                            <span style={{ fontSize: 12, color: '#065f46' }}>{b}</span>
-                          </div>
-                        ))}
+              <AnimatePresence>
+                {hoveredId === t.id && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    style={{ display: 'flex', gap: 16 }}
+                  >
+                    {t.benefits.map(b => (
+                      <div key={b} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                        <Check size={11} color="#0a4a6b" />
+                        <span style={{ fontSize: 11, color: '#555' }}>{b}</span>
                       </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
-                <button style={{
-                  width: '100%', background: '#0d4d40', color: '#fff', border: 'none',
-                  padding: '10px', borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: 'pointer',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6
-                }}>
-                  Book Treatment <ArrowRight size={13} />
-                </button>
+            {/* Price + CTA */}
+            <div style={{
+              padding: '24px 32px', display: 'flex', flexDirection: 'column',
+              alignItems: 'flex-end', justifyContent: 'center', gap: 14,
+              borderLeft: '1px solid #e8e8e8', minWidth: 160
+            }}>
+              <div style={{ textAlign: 'right' }}>
+                <div className="font-playfair" style={{ fontSize: 28, fontWeight: 600, color: '#0a4a6b', lineHeight: 1 }}>${t.price}</div>
+                <div style={{ fontSize: 11, color: '#aaa', marginTop: 2 }}>per person</div>
               </div>
-            </motion.div>
-          ))}
-        </div>
+              <button style={{
+                background: '#0a4a6b', color: '#fff', border: 'none',
+                padding: '10px 20px', fontSize: 10, fontWeight: 800,
+                letterSpacing: '0.12em', textTransform: 'uppercase', cursor: 'pointer'
+              }}>
+                Book
+              </button>
+            </div>
+          </motion.div>
+        ))}
       </div>
 
-      {/* Booking CTA */}
-      <div style={{
-        background: 'linear-gradient(135deg, #0d4d40 0%, #0a4a6b 100%)',
-        padding: '56px 32px', textAlign: 'center'
-      }}>
-        <Heart size={28} color="var(--bb-sand)" style={{ marginBottom: 16 }} />
-        <h2 className="font-playfair" style={{ color: '#fff', fontSize: 'clamp(22px,3.5vw,40px)', margin: '0 0 12px', fontWeight: 600 }}>
-          Reserve Your Oasis Experience
-        </h2>
-        <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 15, marginBottom: 28 }}>
-          Pre-book your treatments before arrival and receive 10% off when combined with your room booking.
-        </p>
-        <button style={{
-          background: 'var(--bb-sand)', color: '#1a1a1a', border: 'none',
-          padding: '14px 32px', borderRadius: 8, fontSize: 15, fontWeight: 700,
-          cursor: 'pointer', boxShadow: '0 8px 24px rgba(0,0,0,0.3)'
-        }}>
-          Book Spa Treatments
-        </button>
-        <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 12, marginTop: 12 }}>
-          10% saving when pre-booked with accommodation · Advance booking recommended
-        </p>
+      {/* CTA */}
+      <div style={{ background: '#0f0f0f', padding: '64px 40px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', alignItems: 'center', gap: 40 }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+              <div style={{ width: 24, height: 1, background: '#c8a96e' }} />
+              <span style={{ fontSize: 10, color: '#c8a96e', letterSpacing: '0.28em', textTransform: 'uppercase' }}>Advance Booking</span>
+            </div>
+            <h2 className="font-playfair" style={{ color: '#fff', fontSize: 'clamp(24px,3.5vw,40px)', margin: '0 0 10px', fontWeight: 600 }}>
+              Reserve Your Oasis Experience
+            </h2>
+            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 14, margin: 0, lineHeight: 1.7 }}>
+              Pre-book treatments alongside your room and receive 10% off. Advance booking is strongly recommended during peak season.
+            </p>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'flex-start' }}>
+            <button style={{
+              background: '#c8a96e', color: '#0f0f0f', border: 'none',
+              padding: '14px 32px', fontSize: 10, fontWeight: 800,
+              letterSpacing: '0.18em', textTransform: 'uppercase', cursor: 'pointer',
+              whiteSpace: 'nowrap'
+            }}>
+              Book Spa Treatments
+            </button>
+            <button style={{
+              background: 'transparent', color: 'rgba(255,255,255,0.4)', border: 'none',
+              fontSize: 11, cursor: 'pointer', textDecoration: 'underline', padding: 0,
+              display: 'flex', alignItems: 'center', gap: 5
+            }}>
+              Download full treatment menu <ArrowRight size={11} />
+            </button>
+          </div>
+        </div>
       </div>
 
     </div>
